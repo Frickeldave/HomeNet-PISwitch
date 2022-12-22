@@ -1,10 +1,9 @@
 #!/bin/bash
-#
-# This is an basic example to control a bunch of shelly devices
+# Split input parameter in 2 parts
+param1=$(cut -d ' ' -f 2 <<< $*)
+param2=$(cut -d ' ' -f 3 <<< $*)
 
-param1=$(cut -d ' ' -f 1 <<< $*)
-param2=$(cut -d ' ' -f 2 <<< $*)
-
+# Transform on to true and off to false
 if [ "$param2" == "on" ]
 then 
     _switch="true"
@@ -16,6 +15,7 @@ else
     exit 1;
 fi
 
+# Set IP address for the given device
 case $param1 in
     officeepoxylight)
         _ip="192.168.55.213";
@@ -47,5 +47,6 @@ case $param1 in
         ;;
 esac
 
+# Send API request to shelly device
 echo "send curl to http://$_ip/rpc/Switch.Set?id=0&on=$_switch" >> /home/dave/pimenu/pimenu.log
 curl "http://$_ip/rpc/Switch.Set?id=0&on=$_switch"
